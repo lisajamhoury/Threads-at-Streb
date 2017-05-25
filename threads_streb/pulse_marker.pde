@@ -8,18 +8,19 @@ class PulseMarker {
   float velocityY;
   
   // size
-  float pulseSmall = 0.07 * width;
-  float pulseLarge = 0.30 * width;
+  float pulseSmall = 0.2 * width;
+  float pulseLarge = 0.6 * width;
   float initSize;
   float size;
-  float pulseSzMultiplier = 10;
+  float pulseSzMultiplier = 1;
+  String dir = "shrinking"; 
   
   // color
   float opacity = 30;
   color clr;
   color permClr;
   color startClr = color(255,0,0, 100);
-  float sat = 100;
+  float sat = 90; // Start saturation lower than 100%
 
   // bpm
   int bpm;
@@ -39,7 +40,7 @@ class PulseMarker {
     
     if (centered) {
       location = PULSECTR.copy();
-      pulseSzMultiplier = 150;
+      pulseSzMultiplier = 2;
       cent = true;
     } else {
       location = initLocation.copy();
@@ -54,8 +55,8 @@ class PulseMarker {
     
     bpm = currentBpm;
     timeBtwBeats = ONEMINUTE/bpm;
-    prevBeatTime = msPassed;
-    initSize = map(currentBpm, LOWBPM, HIGHBPM, pulseSmall, RESOLUTION); // reverse mapping, slower is larger
+    prevBeatTime = millis();
+    initSize = map(currentBpm, LOWBPM, HIGHBPM, pulseSmall, pulseLarge); // reverse mapping, slower is larger
     size = initSize;
     acceleration = new PVector(0,0);
     velocityY = map(currentBpm, LOWBPM, HIGHBPM, 0.1, .5); // slower is slower 
@@ -82,7 +83,7 @@ class PulseMarker {
   }
   
   void reduceMultiplier() {
-    pulseSzMultiplier = 10;
+    pulseSzMultiplier = 1;
   }
   
   void fadeColorDown() {
@@ -123,14 +124,18 @@ class PulseMarker {
     if (drawMarker == true) {
       if (anim == true) animate();
    
-      timeSinceBeat = msPassed - prevBeatTime;
+      timeSinceBeat = millis() - prevBeatTime;
       
       if (timeSinceBeat > timeBtwBeats) {
-        size = lerp(size, initSize * pulseSzMultiplier, lerpAmount);
-        prevBeatTime = msPassed;
-      } else {
-        size = lerp(size, initSize, lerpAmount);
+        dir = "shrinking";
+        prevBeatTime = millis();
+      } else if (timeSinceBeat > timeBtwBeats/2) { 
+        dir = "growing";
       }
+ 
+     if (dir == "shrinking") size = lerp(size, 1.0, lerpAmount);
+     if (dir == "growing") size = lerp(size, initSize*pulseSzMultiplier, lerpAmount);
+
  
       
       //fill(clr);

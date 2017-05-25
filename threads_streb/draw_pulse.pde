@@ -127,12 +127,12 @@ void growing() {
 void shrinking() {
    if (removePulsesSet == false) {
      pulsesToRemove = multiPulses.size();  
-     removePulseTime = msPassed;
+     removePulseTime = millis();
      removeEachInc = pulsesToRemove / removeIncs;
      removePulsesSet = true;
    }
       
-   if (msPassed > removePulseTime + removeRate) {
+   if (millis() > removePulseTime + removeRate) {
      if (multiPulses.size() > removeEachInc) { 
        for (int i = 0; i < removeEachInc; i++) {
          int pos = multiPulses.size() - 1;
@@ -142,19 +142,19 @@ void shrinking() {
       int pos = multiPulses.size() - 1;
       multiPulses.remove(pos);
     }  
-   removePulseTime = msPassed;
+   removePulseTime = millis();
  }
 }
 
 void expandPulseBounds() {
- int pulseTimeElapsed = msPassed - pulseIncTime;
+ int pulseTimeElapsed = millis() - pulseIncTime;
  
  if (pulseTimeElapsed > pulseExpandUnit) {
    if (pulseBound <= targetRadius) { // stop incrementing when radius hit
      pulseBound++;
    }
        
-   pulseIncTime = msPassed;
+   pulseIncTime = millis();
  }
 }
 

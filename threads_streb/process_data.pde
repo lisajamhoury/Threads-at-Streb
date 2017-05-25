@@ -2,8 +2,8 @@
 int pulseSensor = 0;
 
 //Constants for mapping data 
-int LOWBPM = 30; // reset for perfomer!!
-int HIGHBPM = 120; // reset for perfomer!!
+int LOWBPM = 0; // reset for perfomer!!
+int HIGHBPM = 300; // reset for perfomer!!
 
 //Pulse bpm timing
 int pulseTimeCtr; // count time elapsed since last calculation
@@ -17,17 +17,21 @@ int currentBpm;
 boolean pulse = false;
 
 void setupProcessData() {
-  pulseTimeCtr = msPassed;
+  //pulseTimeCtr = msPassed;
+  pulseTimeCtr = millis();
 }
 
 void getSensorData() { 
- pulseSensor = heartBeatLisa; // RESET FOR PERFORMER 
+  
+ pulseSensor = heartBeatLisa; // RESET FOR PERFORMER  
  calculateBpm();
 }
 
 
 void calculateBpm() {
- int timeElapsed = msPassed - pulseTimeCtr; 
+ //int timeElapsed = msPassed - pulseTimeCtr; 
+  int timeElapsed = millis() - pulseTimeCtr;
+  
 
  if (pulseSensor == 1 && lastPulseSensorVal == 0) {
    pulseCtr++;
@@ -36,7 +40,7 @@ void calculateBpm() {
  if (timeElapsed > BPMTIMESPAN) {
   currentBpm = (ONEMINUTE/BPMTIMESPAN)*pulseCtr; 
   currentBpm = limitBpm(currentBpm, LOWBPM, HIGHBPM);
-  pulseTimeCtr = msPassed;
+  pulseTimeCtr = millis();
   pulseCtr = 0;
  }
  lastPulseSensorVal = pulseSensor;

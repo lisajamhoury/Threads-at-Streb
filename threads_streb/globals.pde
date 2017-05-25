@@ -7,7 +7,7 @@ float AREA;
 int RESOLUTION;
 
 //background 
-float bgOpacity = 10;
+float bgOpacity = 5;
 
 void setupGlobals() {  
   //Set positioning constants

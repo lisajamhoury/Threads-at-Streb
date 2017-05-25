@@ -15,7 +15,7 @@ boolean centered = false;
 boolean animate = false;
 
 // pulse marker circumference lerp amount
-float lerpAmount = 0.01;
+float lerpAmount = 0.03;
 float lerpInc = 0.01;
 
 
@@ -66,7 +66,7 @@ void processControls(char inKeyChar) {
     if (animate) {
       bgOpacity = 1;
     } else {
-      bgOpacity = 10;
+      bgOpacity = 5;
     }
   }
   

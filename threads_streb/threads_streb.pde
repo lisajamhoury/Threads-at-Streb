@@ -42,7 +42,13 @@ void draw() {
     getCsvData();
   } 
   
+  if (multiPulses.size() > 1) {
+    String direction = multiPulses.get(0).dir;
+    println(direction);
+  
+  }
+  
   getSensorData();
   runControls();
-
+  //println(currentBpm);
 }
