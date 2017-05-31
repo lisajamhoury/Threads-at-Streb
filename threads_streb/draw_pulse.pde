@@ -30,7 +30,7 @@ void setupMultiPulse() {
  
  // set radius and duration for pulse expansion
  pulseExDuration = 60000 * 3; //expand pulse over three minutes  
- targetRadius = width/3; // set the target width for each half 
+ targetRadius = width/2; // set the target width for each half 
  pulseExpandUnit = pulseExDuration/targetRadius; //how many millis between each x bound expansion
 }
 
@@ -55,6 +55,7 @@ void drawMultiPulse(){
 
 
 void runMultiPulse() {
+  
   if (multiPulses.size() == 0) {
     return;
   }
@@ -64,6 +65,7 @@ void runMultiPulse() {
   for (int i = 0; i < multiPulses.size(); i++) {
    
     if (fadePulsesUp == true) {
+   
      multiPulses.get(i).fadeColorUp();
      
      //check if each pulse has finished fading
@@ -74,12 +76,13 @@ void runMultiPulse() {
     
    if (fadePulsesDown == true) {
      multiPulses.get(i).fadeColorDown();
+     
      //check if each pulse has finished fading 
      if (multiPulses.get(i).getFadeStatus() == false) {
        allPulsesFaded = false;
-     }
-     
+     }  
    }
+   
    multiPulses.get(i).run();
   }
   
@@ -88,7 +91,7 @@ void runMultiPulse() {
   }
   
   if (fadePulsesDown == true && allPulsesFaded == true) {
-    drawPulse = false;
+    fadePulsesDown = false;
   }
    
 }
@@ -175,8 +178,8 @@ PVector circlePulse(float radius) {
   
   float rad = radius;
   float angle = random(0, TWO_PI);
-  float newX = cos(angle) * rad;
-  float newY = sin(angle) * rad;
+  float newX = PULSECTR.x + (cos(angle) * rad);
+  float newY = PULSECTR.y + (sin(angle) * rad);
   newLoc = new PVector(newX, newY);
 
   return newLoc;

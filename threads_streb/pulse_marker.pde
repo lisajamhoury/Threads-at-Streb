@@ -20,7 +20,10 @@ class PulseMarker {
   color clr;
   color permClr;
   color startClr = color(255,0,0, 100);
-  float sat = 90; // Start saturation lower than 100%
+  float brightness; 
+  boolean soloMkr;
+  float stkWt = 5;
+  //float sat = 10; // Start saturation lower than 100%
 
   // bpm
   int bpm;
@@ -30,17 +33,23 @@ class PulseMarker {
 
   // fading booleans
   boolean fadeComplete = true;
-  boolean drawMarker = true;
+  boolean drawMarker;
   boolean anim;
   boolean cent;
-  
+  boolean toStrobe;
   
   PulseMarker(PVector iLoc) {
     initLocation = iLoc;
     
+    if (drawPulse) {
+      drawMarker = true;
+    } else {
+      drawMarker = false;
+    }
+    
     if (centered) {
       location = PULSECTR.copy();
-      pulseSzMultiplier = 2;
+      pulseSzMultiplier = 10;
       cent = true;
     } else {
       location = initLocation.copy();
@@ -51,6 +60,20 @@ class PulseMarker {
       anim = true;
     } else {
       anim = false;
+    }
+    
+    if (solo) {
+      brightness = 100;
+      soloMkr = true;
+    } else {
+      brightness = 30;
+      soloMkr = false;
+    }
+    
+    if (strobe) {
+      toStrobe = true;
+    } else {
+      toStrobe = false;
     }
     
     bpm = currentBpm;
@@ -76,10 +99,8 @@ class PulseMarker {
   }
   
   void setColor() {
-    //permClr = color(map(bpm, LOWBPM, HIGHBPM, 255, 100), opacity); // reverse mapping, slower is brighter
     permClr = color(255, opacity);
     clr = permClr;
-  
   }
   
   void reduceMultiplier() {
@@ -87,22 +108,19 @@ class PulseMarker {
   }
   
   void fadeColorDown() {
-   if (clr >= 0) {
+   if (brightness >= lowBright) {
      fadeComplete = false;
-     clr-=1;
+     brightness-=1;
     } else {
+      
      fadeComplete = true;
-     drawMarker = false;
     }
   }
   
   void fadeColorUp() {
-    if (clr < permClr/3) {
-      if (drawMarker == false) {
-        drawMarker = true;
-      }
+    if (brightness < highBright) {
       fadeComplete = false;
-      clr += 1;
+      brightness += 1;
     } else {
      fadeComplete = true;
     }
@@ -110,6 +128,10 @@ class PulseMarker {
   
   boolean getFadeStatus() {
    return fadeComplete;
+  }
+  
+  void toStrobe() {  
+    toStrobe = true;
   }
   
   void toggleAnimate() {
@@ -132,39 +154,34 @@ class PulseMarker {
       } else if (timeSinceBeat > timeBtwBeats/2) { 
         dir = "growing";
       }
- 
+      
+     if (toStrobe) {
+       if (pulseSzMultiplier < 50) {
+         pulseSzMultiplier+=0.05;
+         stkWt+=0.1;
+       }
+     } 
+     
      if (dir == "shrinking") size = lerp(size, 1.0, lerpAmount);
      if (dir == "growing") size = lerp(size, initSize*pulseSzMultiplier, lerpAmount);
-
- 
-      
-      //fill(clr);
-      //noStroke();
-      
-      colorMode(HSB, 100);
-      strokeWeight(0.5);
-      stroke(100,sat,100, sat);
-      noFill();
-  
-      pushMatrix();
-      translate(width/2, height/2);
-      
-      
-      if (!anim){
-        if (cent) {
-          location.lerp(PULSECTR, 0.01);
-        } else {
-          location.lerp(initLocation, 0.01);
-        }
+     
+    colorMode(HSB, 100);
+    strokeWeight(stkWt);
+    stroke(0, 0, brightness); // 30 when grayed out
+    noFill();
+    
+    if (!anim){
+      if (cent) {
+        location.lerp(PULSECTR, 0.01);
+      } else {
+        location.lerp(initLocation, 0.01);
       }
+    }
+    
+    ellipse(location.x, location.y, size, size);
+    
+    colorMode(RGB, 255);
       
-      ellipse(location.x, location.y, size, size);
-      popMatrix();
-      
-      colorMode(RGB, 255);
-      
-      // lower saturation until 0
-      if (sat > 5) sat-=0.01;
     }
 
   }

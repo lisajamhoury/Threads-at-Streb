@@ -1,4 +1,7 @@
 // SET YOUR PERFORMER IN process_data line 24 
+// SET ROPE CENTER with 'p', the enter PULSECTR in globals line 14
+
+PImage alphaImg;
 
 // used for csv data 
 boolean debug = true;
@@ -24,6 +27,9 @@ void setup() {
     oscSetup(5502);
   }
   
+  //load alpha img
+  alphaImg = loadImage("alpha.png");
+  
   // for processing bpm
   setupProcessData();
   
@@ -33,6 +39,7 @@ void setup() {
 
 void draw() {
   noStroke();
+  //background(255);
   fill(0,bgOpacity);
   rect(0,0,width,height);
   
@@ -42,13 +49,14 @@ void draw() {
     getCsvData();
   } 
   
-  if (multiPulses.size() > 1) {
-    String direction = multiPulses.get(0).dir;
-    println(direction);
-  
-  }
+  //if (multiPulses.size() > 0) {
+  //  println(multiPulses.get(0).size);
+  //}
   
   getSensorData();
   runControls();
-  //println(currentBpm);
+  
+  if (setup) setRopeCenter(); 
+  
+  //image(alphaImg, 0,0,width,height);
 }
