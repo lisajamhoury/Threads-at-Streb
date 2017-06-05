@@ -1,13 +1,15 @@
-// SET YOUR PERFORMER IN process_data line 24 
+// SET YOUR PERFORMER IN process_data line 26 
 // SET ROPE CENTER with 'p', the enter PULSECTR in globals line 14
+// CHANGE DEBUG -- line 8 -- TO FALSE
 
-PImage alphaImg;
+//PImage alphaImg;
 
 // used for csv data 
-boolean debug = true;
+boolean debug = false;
 
 void setup() {
   size(1400, 1050, P3D); // streb resolution
+  //size(700, 525, P3D); // half  resolution
  
   background(0);
   smooth(4);
@@ -24,11 +26,11 @@ void setup() {
   } else {
     
     //setup osc
-    oscSetup(5502);
+    oscSetup(5501);
   }
   
   //load alpha img
-  alphaImg = loadImage("alpha.png");
+  //alphaImg = loadImage("alpha.png");
   
   // for processing bpm
   setupProcessData();

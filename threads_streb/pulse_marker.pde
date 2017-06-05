@@ -66,7 +66,7 @@ class PulseMarker {
       brightness = 100;
       soloMkr = true;
     } else {
-      brightness = 30;
+      brightness = 45;
       soloMkr = false;
     }
     
