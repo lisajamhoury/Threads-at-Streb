@@ -5,11 +5,12 @@
 //PImage alphaImg;
 
 // used for csv data 
-boolean debug = false;
+boolean debug = true;
 
 void setup() {
   size(1400, 1050, P3D); // streb resolution
   //size(700, 525, P3D); // half  resolution
+  //fullScreen();
  
   background(0);
   smooth(4);
@@ -40,25 +41,25 @@ void setup() {
 }
 
 void draw() {
-  noStroke();
-  //background(255);
-  fill(0,bgOpacity);
-  rect(0,0,width,height);
   
+  if (introWhite) {
+    fill(255);
+  } else {
+   fill(0,bgOpacity);
+  }
+  
+  noStroke();
+  rect(0,0,width,height);
   
   if (debug) {
     //get fake data from csv
     getCsvData();
   } 
   
-  //if (multiPulses.size() > 0) {
-  //  println(multiPulses.get(0).size);
-  //}
-  
   getSensorData();
   runControls();
   
   if (setup) setRopeCenter(); 
   
-  //image(alphaImg, 0,0,width,height);
+
 }

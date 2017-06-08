@@ -24,76 +24,77 @@ float removeEachInc;
 
 // set up for multipulse array 
 void setupMultiPulse() { 
- 
- //create array for pulse markers
- multiPulses = new ArrayList<PulseMarker>();
- 
- // set radius and duration for pulse expansion
- pulseExDuration = 60000 * 3; //expand pulse over three minutes  
- targetRadius = width/2; // set the target width for each half 
- pulseExpandUnit = pulseExDuration/targetRadius; //how many millis between each x bound expansion
+
+  //create array for pulse markers
+  multiPulses = new ArrayList<PulseMarker>();
+
+  // set radius and duration for pulse expansion
+  pulseExDuration = 60000 * 3; //expand pulse over three minutes  
+  targetRadius = width/2; // set the target width for each half 
+  pulseExpandUnit = pulseExDuration/targetRadius; //how many millis between each x bound expansion
 }
 
-void drawMultiPulse(){
-  
+void drawMultiPulse() {
+
   //If pulse array is growing -- add on pulse
   if (growing == true) { 
     growing();
-   } 
-   
-   //If pulse array is shrinking -- remove pulses in order they were drawn 
-   if (growing == false) {
-     shrinking();
-   } 
- 
-   // Draw pulse if true, otherwise, just keep count   
-   if (drawPulse == true) {
-     runMultiPulse();
-   }
+  } 
 
+  //If pulse array is shrinking -- remove pulses in order they were drawn 
+  if (growing == false) {
+    shrinking();
+  } 
+
+  // Draw pulse if true, otherwise, just keep count   
+  if (drawPulse == true) {
+    runMultiPulse();
+  }
 }
 
 
 void runMultiPulse() {
-  
+
+  // if no pulses return
   if (multiPulses.size() == 0) {
     return;
   }
-  
+
   boolean allPulsesFaded = true;
-    
+
+  // go through all pulses  
   for (int i = 0; i < multiPulses.size(); i++) {
-   
+
+    // if pulses are fading up
     if (fadePulsesUp == true) {
-   
-     multiPulses.get(i).fadeColorUp();
-     
-     //check if each pulse has finished fading
-     if (multiPulses.get(i).getFadeStatus() == false) {
-       allPulsesFaded = false;
-     }
-   }
-    
-   if (fadePulsesDown == true) {
-     multiPulses.get(i).fadeColorDown();
-     
-     //check if each pulse has finished fading 
-     if (multiPulses.get(i).getFadeStatus() == false) {
-       allPulsesFaded = false;
-     }  
-   }
-   
-   multiPulses.get(i).run();
+      
+      multiPulses.get(i).fadeColorUp();
+
+      //check if each pulse has finished fading
+      if (multiPulses.get(i).getFadeStatus() == false) {
+        allPulsesFaded = false;
+      }
+    }
+
+    if (fadePulsesDown == true) {
+      multiPulses.get(i).fadeColorDown();
+
+      //check if each pulse has finished fading 
+      if (multiPulses.get(i).getFadeStatus() == false) {
+        allPulsesFaded = false;
+      }
+    }
+
+    multiPulses.get(i).run();
   }
-  
+
   if (fadePulsesUp == true && allPulsesFaded == true) {
     fadePulsesUp = false;
   }
-  
+
   if (fadePulsesDown == true && allPulsesFaded == true) {
     fadePulsesDown = false;
   }
-   
 }
 
 
@@ -101,81 +102,81 @@ void growing() {
   if (pulseSensor == 1 && beat == false) {
     beat = true;
     pulseCount++;
- 
+
     // every two heart beat creates a circle
     if (pulseCount == 2) {
       pulseCount = 0;
       PVector pulseLoc = getPulseLocation();
       // check to make sure you have a bpm
       if (currentBpm > 0) { 
-        
-          multiPulses.add(new PulseMarker(pulseLoc));
-          
-          // Change old pulse to grey
-          int pulseAmt = multiPulses.size();
-          if (pulseAmt > 1) {
-            PulseMarker temp = multiPulses.get(pulseAmt-2);
-            temp.setColor();
-            temp.reduceMultiplier();  
-          } 
-       }
+
+        multiPulses.add(new PulseMarker(pulseLoc));
+
+        // Change old pulse to grey
+        int pulseAmt = multiPulses.size();
+        if (pulseAmt > 1) {
+          PulseMarker temp = multiPulses.get(pulseAmt-2);
+          temp.setColor();
+          temp.reduceMultiplier();
+        }
+      }
     }
   }
- 
- if ( pulseSensor == 0 && beat == true ) {
-   beat = false;
+
+  if ( pulseSensor == 0 && beat == true ) {
+    beat = false;
   }
 }
 
 void shrinking() {
-   if (removePulsesSet == false) {
-     pulsesToRemove = multiPulses.size();  
-     removePulseTime = millis();
-     removeEachInc = pulsesToRemove / removeIncs;
-     removePulsesSet = true;
-   }
-      
-   if (millis() > removePulseTime + removeRate) {
-     if (multiPulses.size() > removeEachInc) { 
-       for (int i = 0; i < removeEachInc; i++) {
-         int pos = multiPulses.size() - 1;
-         multiPulses.remove(pos);
-       }
-     } else if (multiPulses.size() > 0) {
+  if (removePulsesSet == false) {
+    pulsesToRemove = multiPulses.size();  
+    removePulseTime = millis();
+    removeEachInc = pulsesToRemove / removeIncs;
+    removePulsesSet = true;
+  }
+
+  if (millis() > removePulseTime + removeRate) {
+    if (multiPulses.size() > removeEachInc) { 
+      for (int i = 0; i < removeEachInc; i++) {
+        int pos = multiPulses.size() - 1;
+        multiPulses.remove(pos);
+      }
+    } else if (multiPulses.size() > 0) {
       int pos = multiPulses.size() - 1;
       multiPulses.remove(pos);
     }  
-   removePulseTime = millis();
- }
+    removePulseTime = millis();
+  }
 }
 
 void expandPulseBounds() {
- int pulseTimeElapsed = millis() - pulseIncTime;
- 
- if (pulseTimeElapsed > pulseExpandUnit) {
-   if (pulseBound <= targetRadius) { // stop incrementing when radius hit
-     pulseBound++;
-   }
-       
-   pulseIncTime = millis();
- }
+  int pulseTimeElapsed = millis() - pulseIncTime;
+
+  if (pulseTimeElapsed > pulseExpandUnit) {
+    if (pulseBound <= targetRadius) { // stop incrementing when radius hit
+      pulseBound++;
+    }
+
+    pulseIncTime = millis();
+  }
 }
 
 void noBoundExpansion() {
- pulseBound = 5;
+  pulseBound = 5;
 }
 
 
 PVector getPulseLocation() {
- PVector newPulseLoc;
- newPulseLoc = circlePulse(pulseBound);
- return newPulseLoc;
+  PVector newPulseLoc;
+  newPulseLoc = circlePulse(pulseBound);
+  return newPulseLoc;
 }
 
 
 PVector circlePulse(float radius) {
   PVector newLoc;
-  
+
   float rad = radius;
   float angle = random(0, TWO_PI);
   float newX = PULSECTR.x + (cos(angle) * rad);

@@ -2,6 +2,7 @@
 boolean pulse1 = false;
 boolean pulse2 = false;
 boolean pulse3 = false; 
+boolean introWhite = false;
 
 // used to show and hide all pulses
 boolean fadePulsesUp = false;
@@ -22,7 +23,7 @@ float fastLerp = 0.03;
 float slowLerp = 0.01;
 
 float highBright = 100;
-float lowBright = 30;
+float lowBright = 45;
 
 boolean strobe = false;
 
@@ -81,9 +82,11 @@ void processControls(char inKeyChar) {
     // change brightness and lerp speed based on solo
     if (solo) {
       fadePulsesUp = true;
+      fadePulsesDown = false;
       lerpAmount = fastLerp;   
     } else {
       fadePulsesDown = true;
+      fadePulsesUp = false;
       lerpAmount = slowLerp;
     }    
   }
@@ -105,6 +108,20 @@ void processControls(char inKeyChar) {
     pulse2 = true;
     pulse3 = false;
   }
+  
+  
+  // BLACK OUT 
+  if (inKeyChar == '8') {
+    introWhite = true;
+  }
+  
+    
+  // BLACK OUT 
+  if (inKeyChar == '9') {
+    introWhite = false;
+  }
+  
+  
   
   // BLACK OUT 
   if (inKeyChar == '0') {
@@ -128,14 +145,15 @@ void processControls(char inKeyChar) {
 
 
 void runControls() {
+  
+ 
+  
+
 
   // start pulses, draw pulses
   if (pulse1 == true) {
-    //if (fadePulsesDown == true) {
-    //  fadePulsesUp = true;
-    //  fadePulsesDown = false;
-    //}
-    
+
+  
     drawPulse = true;
     
     // if there's a bpm and it's not growing, 
@@ -163,8 +181,7 @@ void runControls() {
 
   // hide pulses
   if (pulse2 == true) {
-    //fadePulsesDown = true;
-    
+        
     growing = true;
     expandPulseBounds();
     drawMultiPulse();
@@ -186,7 +203,7 @@ void runControls() {
     }
   }
 
-  // Blackout  
+  // End Blackout  
   if (pulse3 == true) {
     
     drawPulse = false; 
@@ -196,4 +213,5 @@ void runControls() {
    
   }
   
+   
 } // Close run controls

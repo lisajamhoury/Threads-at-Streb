@@ -118,7 +118,7 @@ class PulseMarker {
   }
   
   void fadeColorUp() {
-    if (brightness < highBright) {
+    if (brightness <= highBright) {
       fadeComplete = false;
       brightness += 1;
     } else {
@@ -167,7 +167,7 @@ class PulseMarker {
      
     colorMode(HSB, 100);
     strokeWeight(stkWt);
-    stroke(0, 0, brightness); // 30 when grayed out
+    stroke(0, 0, brightness); // 45 when grayed out
     noFill();
     
     if (!anim){
@@ -183,6 +183,5 @@ class PulseMarker {
     colorMode(RGB, 255);
       
     }
-
   }
 }
